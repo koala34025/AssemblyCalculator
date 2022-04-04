@@ -31,11 +31,13 @@ TokenSet getToken(void)
         lexeme[i] = '\0';
         return INT;
     } 
-    /*else if (c == '+' || c == '-') {
+    /*
+    else if (c == '+' || c == '-') {
         lexeme[0] = c;
         lexeme[1] = '\0';
         return ADDSUB;
-    }*/
+    }
+    */
 
     // determine ADDSUB or INCDEC
     else if (c == '+') {
