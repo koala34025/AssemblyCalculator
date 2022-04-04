@@ -237,27 +237,28 @@ extern void statement(void) {
 }
 
 // assign_expr := ID ASSIGN assign_expr | or_expr
+// assign_expr := or_expr | ID ASSIGN assign_expr
+// since match(ID) is seperated in two function (not like the thing in package code),
+// so we have to directly determine whether it is an or_expr or an ID ASSIGN assign_expr
+
 extern BTNode* assign_expr(void) {
     BTNode* retp = NULL, * left = NULL;
 
-    if (match(ID)) {
-        left = makeNode(ID, getLexeme());
-        advance();
-        if (match(ASSIGN)) {
+    //if (match(ID)) {
+        left = or_expr();
+        if (left->data == ID && match(ASSIGN)) {
             retp = makeNode(ASSIGN, getLexeme());
             advance();
             retp->left = left;
             retp->right = assign_expr();
-            //retp->right = or_expr(); // notice: recursively call or_expr() not assign_expr(), refer to package code's logic (but wrong...)
         }
-        else { // think about the grammar and notice what the retp->left should put
-            retp = or_expr();
-            retp->left = left;
+        else {
+            retp = left;
         }
-    }
-    else {
-        retp = or_expr();
-    }
+    //}
+    //else {
+        //retp = or_expr();
+    //}
     return retp;
 }
 
@@ -399,7 +400,7 @@ extern BTNode* factor(void) {
         advance();
     } else if (match(INCDEC)) {
         retp = makeNode(INCDEC, getLexeme());
-        retp->left = makeNode(INT, "0"); // TODO (think...)
+        //retp->left = makeNode(INT, "0"); // TODO (think...)
         advance();
         if (match(ID)) {
             retp->right = makeNode(ID, getLexeme());
@@ -415,6 +416,12 @@ extern BTNode* factor(void) {
         else
             error(MISPAREN);
     } else {
+        for (int i = 0; i < 8; i++) {
+            if (match(i)) {
+                printf("TokenSet: %d\n", i);
+                break;
+            }
+        }
         error(NOTNUMID);
     }
     return retp;
