@@ -9,7 +9,9 @@ typedef enum {
     INT, ID,
     ADDSUB, MULDIV,
     ASSIGN, 
-    LPAREN, RPAREN
+    LPAREN, RPAREN,
+    INCDEC,
+    AND, OR, XOR
 } TokenSet;
 
 // Test if a token matches the current token 
