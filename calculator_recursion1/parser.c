@@ -227,7 +227,7 @@ extern void statement(void) {
             freeTree(retp);
             for (int i = 0; i < 8; i++) {
                 if (match(i)) {
-                    printf("%d\n", i);
+                    printf("TokenSet: %d\n", i);
                     break;
                 }
             }
@@ -243,15 +243,17 @@ extern BTNode* assign_expr(void) {
     if (match(ID)) {
         left = makeNode(ID, getLexeme());
         advance();
-        //if (!match(ASSIGN)) {
-        //    retp = left;
-        //}
-        //else {
+        if (match(ASSIGN)) {
             retp = makeNode(ASSIGN, getLexeme());
             advance();
             retp->left = left;
-            retp->right = or_expr(); // notice: recursively call or_expr() not assign_expr(), refer to package code's logic 
-        //}
+            retp->right = assign_expr();
+            //retp->right = or_expr(); // notice: recursively call or_expr() not assign_expr(), refer to package code's logic (but wrong...)
+        }
+        else { // think about the grammar and notice what the retp->left should put
+            retp = or_expr();
+            retp->left = left;
+        }
     }
     else {
         retp = or_expr();

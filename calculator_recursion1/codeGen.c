@@ -34,6 +34,24 @@ int evaluateTree(BTNode *root) {
                     retval = lv / rv;
                 }
                 break;
+
+            case INCDEC:
+
+                break;
+            case AND: case OR: case XOR:
+                lv = evaluateTree(root->left);
+                rv = evaluateTree(root->right);
+                if (strcmp(root->lexeme, "&") == 0) {
+                    retval = lv & rv;
+                }
+                else if (strcmp(root->lexeme, "|") == 0) {
+                    retval = lv | rv;
+                }
+                else if (strcmp(root->lexeme, "^") == 0) {
+                    retval = lv ^ rv;
+                }
+                break;
+
             default:
                 retval = 0;
         }
@@ -48,3 +66,19 @@ void printPrefix(BTNode *root) {
         printPrefix(root->right);
     }
 }
+void printInfix(BTNode* root) {
+    if (root != NULL) {
+        printInfix(root->left);
+        printf("%s ", root->lexeme);
+        printInfix(root->right);
+    }
+}
+
+void printPostfix(BTNode* root) {
+    if (root != NULL) {
+        printPostfix(root->left);
+        printPostfix(root->right);
+        printf("%s ", root->lexeme);
+    }
+}
+
