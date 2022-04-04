@@ -38,10 +38,10 @@ int evaluateTree(BTNode *root) {
             case INCDEC:
                 rv = evaluateTree(root->right);
                 if (strcmp(root->lexeme, "++") == 0) {
-                    retval = 1 + rv;
+                    retval = setval(root->right->lexeme, 1 + rv);
                 }
                 else if (strcmp(root->lexeme, "--") == 0) {
-                    retval = -1 + rv;
+                    retval = setval(root->right->lexeme, -1 + rv);
                 }
                 break;
             case AND: case OR: case XOR:
