@@ -86,7 +86,7 @@ TokenSet getToken(void)
         strcpy(lexeme, ")");
         return RPAREN;
     } else if (isalpha(c) || c == '_') {
-
+        
         // handle arbitrary variable names, e.g., Var_1
         lexeme[0] = c;
         c = fgetc(stdin);

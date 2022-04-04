@@ -221,6 +221,16 @@ extern void statement(void) {
             advance();
         }
         else {
+            printf("Prefix traversal: ");
+            printPrefix(retp);
+            printf("\n");
+            freeTree(retp);
+            for (int i = 0; i < 8; i++) {
+                if (match(i)) {
+                    printf("%d\n", i);
+                    break;
+                }
+            }
             error(SYNTAXERR);
         }
     }
@@ -233,10 +243,15 @@ extern BTNode* assign_expr(void) {
     if (match(ID)) {
         left = makeNode(ID, getLexeme());
         advance();
-        retp = makeNode(ASSIGN, getLexeme());
-        advance();
-        retp->left = left;
-        retp->right = assign_expr();
+        //if (!match(ASSIGN)) {
+        //    retp = left;
+        //}
+        //else {
+            retp = makeNode(ASSIGN, getLexeme());
+            advance();
+            retp->left = left;
+            retp->right = or_expr(); // notice: recursively call or_expr() not assign_expr(), refer to package code's logic 
+        //}
     }
     else {
         retp = or_expr();
@@ -382,7 +397,7 @@ extern BTNode* factor(void) {
         advance();
     } else if (match(INCDEC)) {
         retp = makeNode(INCDEC, getLexeme());
-        retp->left = makeNode(INT, "0");
+        retp->left = makeNode(INT, "0"); // TODO (think...)
         advance();
         if (match(ID)) {
             retp->right = makeNode(ID, getLexeme());
@@ -433,5 +448,6 @@ void err(ErrorType errorNum) {
                 break;
         }
     }
+    printf("EXIT 1\n");
     exit(0);
 }
