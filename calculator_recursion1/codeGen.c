@@ -36,7 +36,13 @@ int evaluateTree(BTNode *root) {
                 break;
 
             case INCDEC:
-
+                rv = evaluateTree(root->right);
+                if (strcmp(root->lexeme, "++") == 0) {
+                    retval = 1 + rv;
+                }
+                else if (strcmp(root->lexeme, "--") == 0) {
+                    retval = -1 + rv;
+                }
                 break;
             case AND: case OR: case XOR:
                 lv = evaluateTree(root->left);

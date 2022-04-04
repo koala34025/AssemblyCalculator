@@ -400,7 +400,7 @@ extern BTNode* factor(void) {
         advance();
     } else if (match(INCDEC)) {
         retp = makeNode(INCDEC, getLexeme());
-        //retp->left = makeNode(INT, "0"); // TODO (think...)
+        retp->left = makeNode(INT, "0"); // TODO (think...)
         advance();
         if (match(ID)) {
             retp->right = makeNode(ID, getLexeme());
