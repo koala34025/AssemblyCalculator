@@ -119,7 +119,7 @@ extern void statement(void) {
             advance();
         }
         else {
-            printf("Prefix traversal: ");
+            /*printf("Prefix traversal: ");
             printPrefix(retp);
             printf("\n");
             freeTree(retp);
@@ -128,7 +128,7 @@ extern void statement(void) {
                     printf("TokenSet: %d\n", i);
                     break;
                 }
-            }
+            }*/
             error(SYNTAXERR);
         }
     }
@@ -314,12 +314,12 @@ extern BTNode* factor(void) {
         else
             error(MISPAREN);
     } else {
-        for (int i = 0; i < 8; i++) {
+        /*for (int i = 0; i < 8; i++) {
             if (match(i)) {
                 printf("TokenSet: %d\n", i);
                 break;
             }
-        }
+        }*/
         error(NOTNUMID);
     }
     return retp;
