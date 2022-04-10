@@ -4,7 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "codeGen.h"
-#include "lex.h"
 
 int VarInRight(BTNode* root) {
     if (!root)
@@ -21,11 +20,11 @@ int evaluateTree(BTNode *root) {
 
     if (root != NULL) {
         switch (root->data) {
-            case ID:
-                if (!existVar(root->lexeme)) {              // first appears
-                    if (match(ASSIGN))                      // followed by a (=)
-                        retval = getval(root->lexeme);
-                    else
+            case ID:                                        // called by evaluateTree(root->right)
+                if (!existVar(root->lexeme)) {              // first appears than instantly know its wrong
+                    //if (match(ASSIGN))                      
+                    //    retval = getval(root->lexeme);
+                    //else
                         error(NOTFOUND);
                 }
                 else
@@ -35,8 +34,8 @@ int evaluateTree(BTNode *root) {
                 retval = atoi(root->lexeme);
                 break;
             case ASSIGN:
-                rv = evaluateTree(root->right);
-                retval = setval(root->left->lexeme, rv);
+                rv = evaluateTree(root->right);             // since LVAL must be variable, setval straightly
+                retval = setval(root->left->lexeme, rv);    // otherwise in case ID:, it checks existVar();
                 break;
             case ADDSUB:
             case MULDIV:

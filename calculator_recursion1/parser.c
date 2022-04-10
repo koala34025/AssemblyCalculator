@@ -98,6 +98,7 @@ extern void statement(void) {
     BTNode* retp = NULL;
 
     if (match(ENDFILE)) {
+        //printf("MOV r0 [0]\nMOV r1 [4]\nMOV r2 [8]\n");
         exit(0);
     }
     else if (match(END)) {
