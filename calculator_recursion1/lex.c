@@ -4,6 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "lex.h"
+#include "parser.h"
 
 static TokenSet getToken(void);
 static TokenSet curToken = UNKNOWN;
@@ -27,6 +28,9 @@ TokenSet getToken(void)
         }
         // TODO
         // handle invalid variable names, e.g., 1_Var
+        if (isalpha(c) || c == '_') {
+            error(INVANAME);
+        }
         ungetc(c, stdin);
         lexeme[i] = '\0';
         return INT;
