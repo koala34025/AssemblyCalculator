@@ -114,8 +114,8 @@ int evaluateTree(BTNode *root) {
                 break;
 
             case INCDEC:
-                rv = evaluateTree(root->right);
                 lv = evaluateTree(root->left);
+                rv = evaluateTree(root->right);
                 if (strcmp(root->lexeme, "++") == 0) {
                     retval = setval(root->right->lexeme, lv + rv);
                 }
