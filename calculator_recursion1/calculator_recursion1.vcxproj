@@ -149,6 +149,9 @@
     <ClInclude Include="lex.h" />
     <ClInclude Include="parser.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="ACCODE.txt" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
