@@ -5,6 +5,38 @@
 #include <string.h>
 #include "codeGen.h"
 
+int r[8];
+int top;
+
+int push(int data) {
+    if (top >= 8)
+        printf("r[] is full, push nothing\n");
+    else
+        r[++top] = data;
+}
+
+int peek() {
+    if (isEmpty()) 
+        printf("r[] is empty, peek nothing\n");
+    else
+        return r[top];
+}
+
+int pop() {
+    if (isEmpty()) 
+        printf("r[] is empty, pop nothing\n");
+    else 
+        r[top--] = 0;
+}
+
+int isEmpty() {
+    if (top == -1)
+        return 1;
+    else
+        return 0;
+}
+
+
 int VarInRight(BTNode* root) {
     if (!root)
         return 0;
@@ -21,21 +53,28 @@ int evaluateTree(BTNode *root) {
     if (root != NULL) {
         switch (root->data) {
             case ID:                                        // called by evaluateTree(root->right)
-                if (!existVar(root->lexeme)) {              // first appears than instantly know its wrong
+                if (existVar(root->lexeme) == -1) {              // first appears than instantly know its wrong
                     //if (match(ASSIGN))                      
                     //    retval = getval(root->lexeme);
                     //else
-                        error(NOTFOUND);
+                    error(NOTFOUND);
                 }
-                else
+                else {
                     retval = getval(root->lexeme);
+                    push(retval);
+                    printf("MOV r%d [%d]\n", top, existVar(root->lexeme) * 4);
+                }
                 break;
             case INT:
                 retval = atoi(root->lexeme);
+                push(retval);
+                printf("MOV r%d %d\n", top, retval);
                 break;
-            case ASSIGN:
+            case ASSIGN: // mem[]
                 rv = evaluateTree(root->right);             // since LVAL must be variable, setval straightly
                 retval = setval(root->left->lexeme, rv);    // otherwise in case ID:, it checks existVar();
+                pop();
+                printf("MOV [%d] r%d\n", existVar(root->left->lexeme) * 4, top + 1);
                 break;
             case ADDSUB:
             case MULDIV:
@@ -58,6 +97,21 @@ int evaluateTree(BTNode *root) {
                         retval = lv / rv;
                     }
                 }
+                pop();
+                pop();
+                push(retval);
+                if (strcmp(root->lexeme, "+") == 0) {
+                    printf("ADD r%d r%d\n", top, top + 1);
+                }
+                else if (strcmp(root->lexeme, "-") == 0) {
+                    printf("SUB r%d r%d\n", top, top + 1);
+                }
+                else if (strcmp(root->lexeme, "*") == 0) {
+                    printf("MUL r%d r%d\n", top, top + 1);
+                }
+                else if (strcmp(root->lexeme, "/") == 0) {
+                    printf("DIV r%d r%d\n", top, top + 1);
+                }
                 break;
 
             case INCDEC:
@@ -68,6 +122,8 @@ int evaluateTree(BTNode *root) {
                 else if (strcmp(root->lexeme, "--") == 0) {
                     retval = setval(root->right->lexeme, -1 + rv);
                 }
+                r[top] = retval;
+                printf("%c r%d %d\n", strcmp(root->lexeme, "++") == 0 ? "ADD" : "SUB", top, 1);
                 break;
             case AND: case OR: case XOR:
                 lv = evaluateTree(root->left);
@@ -80,6 +136,18 @@ int evaluateTree(BTNode *root) {
                 }
                 else if (strcmp(root->lexeme, "^") == 0) {
                     retval = lv ^ rv;
+                }
+                pop();
+                pop();
+                push(retval);
+                if (strcmp(root->lexeme, "&") == 0) {
+                    printf("AND r%d r%d\n", top, top + 1);
+                }
+                else if (strcmp(root->lexeme, "|") == 0) {
+                    printf("OR r%d r%d\n", top, top + 1);
+                }
+                else if (strcmp(root->lexeme, "^") == 0) {
+                    printf("XOR r%d r%d\n", top, top + 1);
                 }
                 break;
 

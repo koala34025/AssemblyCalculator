@@ -8,6 +8,7 @@
 
 int sbcount = 0;
 Symbol table[TBLSIZE];
+extern int top;
 
 void initTable(void) {
     /*
@@ -65,12 +66,12 @@ int existVar(char* str) {
 
     for (i = 0; i < sbcount; i++) 
         if (strcmp(str, table[i].name) == 0)
-            return 1;
+            return i;
 
     if (sbcount >= TBLSIZE)
         error(RUNOUT);
 
-    return 0;
+    return -1;
 }
 
 BTNode *makeNode(TokenSet tok, const char *lexe) {
@@ -98,7 +99,7 @@ extern void statement(void) {
     BTNode* retp = NULL;
 
     if (match(ENDFILE)) {
-        //printf("MOV r0 [0]\nMOV r1 [4]\nMOV r2 [8]\n");
+        printf("MOV r0 [0]\nMOV r1 [4]\nMOV r2 [8]\nEXIT 0\n");
         exit(0);
     }
     else if (match(END)) {
@@ -108,6 +109,7 @@ extern void statement(void) {
     else {
         retp = assign_expr();
         if (match(END)) {
+            top = -1;
             printf("%d\n", evaluateTree(retp));
             printf("Prefix traversal: ");
             printPrefix(retp);
