@@ -6,6 +6,16 @@
 #include "codeGen.h"
 #include "lex.h"
 
+int VarInRight(BTNode* root) {
+    if (!root)
+        return 0;
+
+    if (root->data == ID)
+        return 1;
+
+    return (VarInRight(root->left) || VarInRight(root->right));
+}
+
 int evaluateTree(BTNode *root) {
     int retval = 0, lv = 0, rv = 0;
 
@@ -39,9 +49,15 @@ int evaluateTree(BTNode *root) {
                 } else if (strcmp(root->lexeme, "*") == 0) {
                     retval = lv * rv;
                 } else if (strcmp(root->lexeme, "/") == 0) {
-                    if (rv == 0)
-                        error(DIVZERO);
-                    retval = lv / rv;
+                    if (rv == 0) {
+                        if (!VarInRight(root->right))
+                            error(DIVZERO)
+                        else
+                            retval = 0;
+                    }
+                    else {
+                        retval = lv / rv;
+                    }
                 }
                 break;
 

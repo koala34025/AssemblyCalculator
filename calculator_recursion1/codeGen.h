@@ -6,6 +6,9 @@
 // Evaluate the syntax tree
 extern int evaluateTree(BTNode *root);
 
+//
+extern int VarInRight(BTNode* root);
+
 // Print the syntax tree in prefix
 extern void printPrefix(BTNode *root);
 
