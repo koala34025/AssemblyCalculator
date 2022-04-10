@@ -73,7 +73,7 @@ int evaluateTree(BTNode *root) {
             case ASSIGN: // mem[]
                 rv = evaluateTree(root->right);             // since LVAL must be variable, setval straightly
                 retval = setval(root->left->lexeme, rv);    // otherwise in case ID:, it checks existVar();
-                printf("MOV [%d] r%d\n", existVar(root->left->lexeme) * 4, top + 1);
+                printf("MOV [%d] r%d\n", existVar(root->left->lexeme) * 4, top);
                 break;
             case ADDSUB:
             case MULDIV:
@@ -115,14 +115,18 @@ int evaluateTree(BTNode *root) {
 
             case INCDEC:
                 rv = evaluateTree(root->right);
+                lv = evaluateTree(root->left);
                 if (strcmp(root->lexeme, "++") == 0) {
-                    retval = setval(root->right->lexeme, 1 + rv);
+                    retval = setval(root->right->lexeme, lv + rv);
                 }
                 else if (strcmp(root->lexeme, "--") == 0) {
-                    retval = setval(root->right->lexeme, -1 + rv);
+                    retval = setval(root->right->lexeme, -lv + rv);
                 }
-                r[top] = retval;
-                printf("%c r%d %d\n", strcmp(root->lexeme, "++") == 0 ? "ADD" : "SUB", top, 1);
+                pop();
+                pop();
+                push(retval);
+                printf("%s r%d r%d\n", strcmp(root->lexeme, "++") == 0 ? "ADD" : "SUB", top, top + 1);
+                printf("MOV [%d] r%d\n", existVar(root->right->lexeme) * 4, top);
                 break;
             case AND: case OR: case XOR:
                 lv = evaluateTree(root->left);
