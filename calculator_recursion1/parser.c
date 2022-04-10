@@ -34,8 +34,6 @@ int getval(char *str) {
     if (sbcount >= TBLSIZE)
         error(RUNOUT);
     
-    //error();
-    
     strcpy(table[sbcount].name, str);
     table[sbcount].val = 0;
     sbcount++;
@@ -60,6 +58,19 @@ int setval(char *str, int val) {
     table[sbcount].val = val;
     sbcount++;
     return val;
+}
+
+int existVar(char* str) {
+    int i = 0;
+
+    for (i = 0; i < sbcount; i++) 
+        if (strcmp(str, table[i].name) == 0)
+            return 1;
+
+    if (sbcount >= TBLSIZE)
+        error(RUNOUT);
+
+    return 0;
 }
 
 BTNode *makeNode(TokenSet tok, const char *lexe) {

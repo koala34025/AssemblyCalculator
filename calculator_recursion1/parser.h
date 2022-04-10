@@ -48,6 +48,9 @@ extern int getval(char *str);
 // Set the value of a variable
 extern int setval(char *str, int val);
 
+//
+extern int existVar(char* str);
+
 // Make a new node according to token type and lexeme
 extern BTNode *makeNode(TokenSet tok, const char *lexe);
 

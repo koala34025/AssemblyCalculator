@@ -1,7 +1,10 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "codeGen.h"
+#include "lex.h"
 
 int evaluateTree(BTNode *root) {
     int retval = 0, lv = 0, rv = 0;
@@ -9,7 +12,14 @@ int evaluateTree(BTNode *root) {
     if (root != NULL) {
         switch (root->data) {
             case ID:
-                retval = getval(root->lexeme);
+                if (!existVar(root->lexeme)) {              // first appears
+                    if (match(ASSIGN))                      // followed by a (=)
+                        retval = getval(root->lexeme);
+                    else
+                        error(NOTFOUND);
+                }
+                else
+                    retval = getval(root->lexeme);
                 break;
             case INT:
                 retval = atoi(root->lexeme);
